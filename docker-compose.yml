@@ -1,0 +1,38 @@
+version: '3.7'
+# Create golang service
+networks:
+    golang:
+        driver: bridge
+services:
+  golang:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: golang:1.13.4-alpine3.10
+    container_name: golang
+    volumes:
+      - .:/go/src/bom_lifestyle_go
+    working_dir: /go/src/bom_lifestyle_go
+    command: go run main.go
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    networks:
+      - golang
+    restart: on-failure
+  mongodb:
+    image: mongo:4.2.1
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+        - MONGO_INITRD_ROOT_USERNAME=root
+        - MONGO_INITRD_ROOT_PASSWORD=B13o01m22
+        - MONGO_INITRD_DATABASE=bom_db
+        - MONGO_INITRD_DATA_PATH=/data/db
+    volumes:
+      - ./data:/data/db
+    networks:
+      - golang
+    restart: on-failure
