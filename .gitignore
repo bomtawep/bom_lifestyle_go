@@ -21,3 +21,6 @@
 # Go workspace file
 go.work
 
+# Exclude environment file
+.env
+
