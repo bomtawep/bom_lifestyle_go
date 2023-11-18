@@ -8,11 +8,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: golang:1.13.4-alpine3.10
+    image: golang
     container_name: golang
     volumes:
-      - .:/go/src/bom_lifestyle_go
-    working_dir: /go/src/bom_lifestyle_go
+      - .:/app
+    working_dir: /app
     command: go run main.go
     ports:
       - "8080:8080"
@@ -22,17 +22,16 @@ services:
       - golang
     restart: on-failure
   mongodb:
-    image: mongo:4.2.1
+    image: mongo
     container_name: mongodb
     ports:
       - "27017:27017"
     environment:
-        - MONGO_INITRD_ROOT_USERNAME=root
-        - MONGO_INITRD_ROOT_PASSWORD=B13o01m22
-        - MONGO_INITRD_DATABASE=bom_db
-        - MONGO_INITRD_DATA_PATH=/data/db
+      MONGO_INITRD_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITRD_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITRD_DATABASE: ${MONGO_DB}
     volumes:
-      - ./data:/data/db
+      - ./mongo-data:/data/db
     networks:
       - golang
     restart: on-failure
